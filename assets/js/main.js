@@ -82,6 +82,7 @@
   var revealables = $$('.rv, .rv-up, .rv-img, .cover, .wave, .common_title, .ba, .cut');
 
   function show(el) {
+    if (el.classList.contains('is-in')) return;
     var d = parseInt(el.getAttribute('data-delay'), 10) || 0;
     if (d) {
       window.setTimeout(function () { el.classList.add('is-in'); }, d);
@@ -92,18 +93,46 @@
     $$('[data-count]', el).forEach(countUp);
   }
 
-  if (!('IntersectionObserver' in window) || reduce) {
+  if (reduce) {
     revealables.forEach(function (el) { el.classList.add('is-in'); });
     $$('[data-count]').forEach(function (el) { el.textContent = el.getAttribute('data-count'); });
   } else {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        show(en.target);
-        io.unobserve(en.target);
-      });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
-    revealables.forEach(function (el) { io.observe(el); });
+    // Scroll-driven rather than IntersectionObserver: an observer silently
+    // failed to fire for the gallery tiles, leaving them clipped to zero width
+    // forever. A geometry check on scroll can't get stuck in that state.
+    var pending = revealables.slice();
+    var rTicking = false;
+
+    function sweep() {
+      rTicking = false;
+      if (!pending.length) return;
+      var vh = window.innerHeight;
+      var line = vh * 0.88;              // reveal once the top edge crosses 88% of the viewport
+      var still = [];
+      for (var i = 0; i < pending.length; i++) {
+        var el = pending[i];
+        var r = el.getBoundingClientRect();
+        // r.top < line covers elements entering from below;
+        // r.bottom > 0 covers anything already scrolled past on load or on a deep link
+        if (r.top < line && r.bottom > 0) { show(el); } else if (r.top < 0) { show(el); } else { still.push(el); }
+      }
+      pending = still;
+    }
+
+    function queueSweep() {
+      if (rTicking) return;
+      rTicking = true;
+      requestAnimationFrame(sweep);
+    }
+
+    window.addEventListener('scroll', queueSweep, { passive: true });
+    window.addEventListener('resize', queueSweep, { passive: true });
+    window.addEventListener('load', sweep);
+    sweep();
+
+    // images finishing late can change the layout under us
+    window.setTimeout(sweep, 600);
+    window.setTimeout(sweep, 2000);
   }
 
   /* ---------------------------------------------------------
