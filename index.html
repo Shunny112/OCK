@@ -14,8 +14,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/style.css">
+<script>
+/* オープニング再生の可否をCSSより先に決める（チラつき防止） */
+(function(){
+  var play = true;
+  try{
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) play = false;
+    if (sessionStorage.getItem('ock-opening') === 'done') play = false;
+    /* ?opening=1 を付けると毎回再生（確認用） */
+    if (location.search.indexOf('opening=1') > -1) play = true;
+  }catch(e){}
+  if (play) {
+    document.documentElement.className += ' is-opening';
+    /* main.js が読めなくても必ず解除する保険 */
+    setTimeout(function(){ document.documentElement.className = document.documentElement.className.replace(/\bis-opening\b/, ''); }, 4500);
+  }
+})();
+</script>
 </head>
 <body>
+
+<!-- ===================== opening ===================== -->
+<div class="Opening" aria-hidden="true">
+  <div class="Opening__inner">
+    <svg class="Opening__ring" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+      <circle class="Opening__pulse" cx="100" cy="100" r="88"></circle>
+      <circle class="Opening__arc" cx="100" cy="100" r="88"></circle>
+    </svg>
+    <span class="Opening__mark">
+      <i style="--i:0">O</i><i style="--i:1">.</i><i style="--i:2">C</i><i style="--i:3">.</i><i style="--i:4">K</i>
+    </span>
+  </div>
+</div>
 
 <div class="home-guide">
   <a href="#gnav">共通メニューに移動</a>

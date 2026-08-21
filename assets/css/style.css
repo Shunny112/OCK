@@ -766,6 +766,71 @@ table{border-collapse:collapse;width:100%}
   .Footer__guide{grid-template-columns:1fr 1fr;gap:3.2rem}
   .Footer__brand{grid-column:span 2}
 }
+/* =========================================================
+   Opening — 白背景に赤い円を描き、中央に O.C.K
+   ========================================================= */
+.Opening{display:none}
+html.is-opening{overflow:hidden}
+html.is-opening .Opening{
+  position:fixed;inset:0;z-index:2000;background:#fff;
+  display:grid;place-items:center;will-change:transform;
+}
+.Opening__inner{position:relative;width:22rem;height:22rem;display:grid;place-items:center}
+
+/* 円 */
+.Opening__ring{
+  position:absolute;inset:0;width:100%;height:100%;overflow:visible;
+  transform:rotate(-150deg) scale(.55);opacity:0;
+  animation:ock-ring 1s cubic-bezier(.18,.9,.24,1.12) .1s forwards;
+}
+.Opening__ring circle{fill:none;stroke:var(--red);transform-box:fill-box;transform-origin:center}
+.Opening__arc{
+  stroke-width:2.5;stroke-linecap:round;
+  stroke-dasharray:553;stroke-dashoffset:553;
+  animation:ock-draw .95s cubic-bezier(.7,0,.2,1) .1s forwards;
+}
+/* 描き終わりに広がる波紋 */
+.Opening__pulse{
+  stroke-width:1.5;opacity:0;
+  animation:ock-pulse .9s cubic-bezier(.2,.7,.3,1) 1s forwards;
+}
+
+/* 文字 */
+.Opening__mark{
+  display:flex;align-items:baseline;
+  font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:4.6rem;line-height:1;
+  letter-spacing:.02em;color:var(--red);
+}
+.Opening__mark i{
+  display:block;font-style:normal;
+  opacity:0;transform:translateY(1.6rem) scale(.8);
+  animation:ock-letter .7s cubic-bezier(.2,1.1,.3,1) forwards;
+  animation-delay:calc(.62s + var(--i) * .06s);
+}
+
+/* 退場：ロゴが抜けたあと画面ごと上へワイプ */
+html.is-opening .Opening.is-out{
+  animation:ock-wipe .85s cubic-bezier(.76,0,.24,1) .22s forwards;
+}
+.Opening.is-out .Opening__inner{
+  animation:ock-out .42s cubic-bezier(.55,0,1,.45) forwards;
+}
+
+@keyframes ock-ring{to{transform:rotate(0deg) scale(1);opacity:1}}
+@keyframes ock-draw{to{stroke-dashoffset:0}}
+@keyframes ock-pulse{
+  0%{opacity:.55;transform:scale(1)}
+  100%{opacity:0;transform:scale(1.55)}
+}
+@keyframes ock-letter{to{opacity:1;transform:none}}
+@keyframes ock-out{to{opacity:0;transform:scale(1.35)}}
+@keyframes ock-wipe{to{transform:translateY(-100%)}}
+
+@media (max-width:768px){
+  .Opening__inner{width:17rem;height:17rem}
+  .Opening__mark{font-size:3.6rem}
+}
+
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
   html{scroll-behavior:auto}

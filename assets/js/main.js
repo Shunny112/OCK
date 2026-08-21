@@ -335,6 +335,34 @@
   }
 
   /* ---------------------------------------------------------
+     Opening
+     --------------------------------------------------------- */
+  var opening = $('.Opening');
+  if (opening) {
+    if (!document.documentElement.classList.contains('is-opening')) {
+      opening.parentNode.removeChild(opening);
+    } else {
+      var closed = false;
+      var closeOpening = function () {
+        if (closed) return;
+        closed = true;
+        try { sessionStorage.setItem('ock-opening', 'done'); } catch (e) {}
+        opening.classList.add('is-out');
+        window.setTimeout(function () {
+          document.documentElement.classList.remove('is-opening');
+          if (opening.parentNode) opening.parentNode.removeChild(opening);
+        }, 1150);
+      };
+      window.setTimeout(closeOpening, 1950);
+      /* クリック / Esc で読み飛ばせるようにする */
+      opening.addEventListener('click', closeOpening);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeOpening();
+      });
+    }
+  }
+
+  /* ---------------------------------------------------------
      Demo form
      --------------------------------------------------------- */
   var form = $('form[data-demo]');
