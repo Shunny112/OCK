@@ -20,9 +20,6 @@
   var play = true;
   try{
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) play = false;
-    if (sessionStorage.getItem('ock-opening') === 'done') play = false;
-    /* ?opening=1 を付けると毎回再生（確認用） */
-    if (location.search.indexOf('opening=1') > -1) play = true;
   }catch(e){}
   if (play) {
     document.documentElement.className += ' is-opening';

@@ -346,7 +346,6 @@
       var closeOpening = function () {
         if (closed) return;
         closed = true;
-        try { sessionStorage.setItem('ock-opening', 'done'); } catch (e) {}
         opening.classList.add('is-out');
         window.setTimeout(function () {
           document.documentElement.classList.remove('is-opening');
