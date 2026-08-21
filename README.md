@@ -124,7 +124,7 @@ TEL 097-574-9225 なども載っているが、いずれもO.C.Kの情報では�
 - `contact.html` のフォーム送信先（現在は `data-demo` 属性でアラート表示のみ）
 - `index.html` の「お知らせ」3件（仮の日付・文言）
 - `company.html` のアクセス（Googleマップ埋め込みにする場合）
-- OGP画像（現在は `assets/img/banner-01.jpg` ほかを流用）
+- OGP画像（現在は `assets/img/banner-02.jpg` ほかを流用）
 - 会社概要の「設立」（資料になし。上記「会社概要の日付について」を参照）
 - `recruit.html` の募集要項（下記「採用情報ページについて」を参照）
 
