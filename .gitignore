@@ -27,5 +27,3 @@ pnpm-debug.log*
 .DS_Store
 .idea/
 *.swp
-.vercel
-.env*
